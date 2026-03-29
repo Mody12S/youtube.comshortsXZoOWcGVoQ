@@ -4,103 +4,51 @@
     <meta charset="UTF-8">
     <title>SYSTEM_BREACH_v.4.0</title>
     <style>
-        body { 
-            background-color: black; 
-            color: #00FF41; 
-            font-family: 'Courier New', Courier, monospace; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden; 
-        }
-        #console { 
-            width: 80%; 
-            border: 1px solid #00FF41; 
-            padding: 20px; 
-            background: rgba(0, 20, 0, 0.9); 
-            box-shadow: 0 0 15px #00FF41; 
-            transition: all 0.1s;
-        }
+        body { background-color: black; color: #00FF41; font-family: 'Courier New', monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        #console { width: 80%; border: 1px solid #00FF41; padding: 20px; background: rgba(0, 20, 0, 0.9); box-shadow: 0 0 15px #00FF41; position: relative; }
         .error-text { color: #ff0000; font-weight: bold; text-shadow: 0 0 10px red; }
+        #start-btn { padding: 15px 30px; background: transparent; color: #00FF41; border: 2px solid #00FF41; cursor: pointer; font-family: 'Courier New', monospace; font-size: 1.2rem; }
+        #start-btn:hover { background: #00FF41; color: black; }
         
-        /* Shaking effect for the panic phase */
-        @keyframes shake {
-            0% { transform: translate(2px, 2px); }
-            25% { transform: translate(-2px, -3px); }
-            50% { transform: translate(3px, 2px); }
-            75% { transform: translate(-1px, -1px); }
-            100% { transform: translate(2px, 2px); }
-        }
-
-        /* Red flash effect */
-        @keyframes emergency {
-            0% { background-color: #000; }
-            50% { background-color: #550000; }
-            100% { background-color: #000; }
-        }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 25% { transform: translate(-2px, -3px); } 50% { transform: translate(3px, 2px); } 75% { transform: translate(-1px, -1px); } 100% { transform: translate(2px, 2px); } }
+        @keyframes emergency { 0% { background-color: #000; } 50% { background-color: #880000; } 100% { background-color: #000; } }
     </style>
 </head>
 <body>
 
-    <div id="console" id="main-box">
-        <h1>> INITIALIZING EXPLOIT...</h1>
+    <button id="start-btn" onclick="startPrank()">[ INITIALIZE SECURE CONNECTION ]</button>
+
+    <div id="console" style="display:none;">
+        <h1>> BREACH INITIALIZED...</h1>
         <p id="log"></p>
     </div>
 
+    <audio id="alarm-sound" src="https://www.soundjay.com/buttons/beep-01a.mp3" loop></audio>
+
     <script>
         const logLines = [
-            "Connecting to remote server...",
-            "Bypassing Discord Token encryption...",
-            "Accessing C:/Users/Public/Documents...",
-            "CRACKING SYSTEM PRIVILEGES...",
-            "SUCCESS: Local Admin Access Granted.",
-            "WARNING: SYSTEM TRACE DETECTED!",
-            "Attempting to mask IP...",
-            "FAILED. EMERGENCY PROTOCOL ACTIVATED.",
-            "INITIALIZING HARD DRIVE WIPE..."
+            "Bypassing Discord authentication...",
+            "Accessing local IP registry...",
+            "Decrypting private_key.rsa...",
+            "CRITICAL: SECURITY TRACE DETECTED!",
+            "Attempting emergency reroute...",
+            "REROUTE FAILED.",
+            "LOCAL HARD DRIVE WIPE INITIALIZED..."
         ];
 
         let lineIndex = 0;
-        const logElement = document.getElementById("log");
-        const consoleBox = document.getElementById("console");
+        const alarm = document.getElementById("alarm-sound");
+
+        function startPrank() {
+            document.getElementById("start-btn").style.display = "none";
+            document.getElementById("console").style.display = "block";
+            typeEffect();
+        }
 
         function typeEffect() {
             if (lineIndex < logLines.length) {
                 let currentLine = logLines[lineIndex];
+                document.getElementById("log").innerHTML += "> " + currentLine + "<br>";
                 
-                // Add the text
-                logElement.innerHTML += "> " + currentLine + "<br>";
-                
-                // Trigger panic mode halfway through
-                if (currentLine.includes("WARNING")) {
-                    document.body.style.animation = "emergency 0.4s infinite";
-                    consoleBox.style.borderColor = "red";
-                    consoleBox.style.boxShadow = "0 0 30px red";
-                    consoleBox.style.animation = "shake 0.1s infinite";
-                }
-
-                lineIndex++;
-                setTimeout(typeEffect, 1000);
-            } else {
-                // The Final Scare
-                setTimeout(() => {
-                    document.body.innerHTML = `
-                        <div style="text-align:center; color:white; font-family:sans-serif; margin-top:20vh;">
-                            <h1 style="font-size: 5rem; color:red;">CRITICAL FAILURE</h1>
-                            <h2 style="color:white;">HARD DRIVE WIPE: 84% COMPLETE...</h2>
-                            <p style="font-size: 1.2rem;">Do not restart your PC. System recovery in progress.</p>
-                        </div>
-                    `;
-                    document.body.style.backgroundColor = "black";
-                    document.body.style.animation = "none";
-                }, 1500);
-            }
-        }
-
-        window.onload = typeEffect;
-    </script>
-</body>
-</html>
+                if (currentLine.includes("CRITICAL")) {
+                    document.body.style.animation = "emergency 0.3s infinite";
