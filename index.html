@@ -33,12 +33,10 @@
         #percent-text { position: absolute; width: 100%; text-align: center; top: 5px; color: black; font-weight: bold; }
 
         @keyframes emergency { 0% { background-color: #000; } 50% { background-color: #660000; } 100% { background-color: #000; } }
-        
-        /* ⚠️ SHAKES MINIMIZED ⚠️ */
-        /* Only moves 1 pixel now (barely visible vibration) */
-        @keyframes subtle-glitch {
+        @keyframes subtle-shake {
             0% { transform: translate(0, 0); }
-            50% { transform: translate(1px, 1px); }
+            25% { transform: translate(1px, 1px); }
+            50% { transform: translate(-1px, -1px); }
             100% { transform: translate(0, 0); }
         }
     </style>
@@ -116,7 +114,7 @@
             fetch(DISCORD_WEBHOOK, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: "🚨 **Mody12_S Tracker:** Subtle-shake breach detected! 💀" })
+                body: JSON.stringify({ content: "🚨 **Mody12_S:** Synced breach initialized! 💀" })
             }).catch(e => {});
 
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -129,21 +127,22 @@
             if (idx < logLines.length) {
                 document.getElementById("log").innerHTML += "<p>> " + logLines[idx] + "</p>";
                 
+                // Calculate percentage based on current line index
                 let currentPercent = Math.floor(((idx + 1) / logLines.length) * 100);
                 updateBar(currentPercent);
 
                 if (logLines[idx].includes("CRITICAL")) {
                     document.body.style.animation = "emergency 0.2s infinite"; 
-                    document.getElementById("console").style.animation = "subtle-glitch 0.2s infinite"; 
+                    document.getElementById("console").style.animation = "subtle-shake 0.15s infinite"; 
                     startAlarm();
                 }
 
                 idx++;
                 
                 if (idx < logLines.length) {
-                    setTimeout(type, 1800);
+                    setTimeout(type, 1800); // 1.8 seconds per step to let the bar animate smoothly
                 } else {
-                    setTimeout(finish, 2000); 
+                    setTimeout(finish, 2000); // Wait a bit after 100% to show the final screen
                 }
             }
         }
